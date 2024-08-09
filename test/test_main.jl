@@ -233,3 +233,15 @@ end
 end
 @test_throws UndefVarError collect(test_scope_throws())
 end
+
+@testset "test_scope_2" begin
+  @resumable function test_forward()
+    for i in 1:10
+      @yield test_bla(i)
+    end
+  end
+
+  test_bla(i) = i^2
+
+  @test collect(test_forward()) == [i^2 for i in 1:10]
+end
